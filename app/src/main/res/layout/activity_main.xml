@@ -12,7 +12,15 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_below="@id/toolbar"
+        android:layout_above="@+id/btn_add_more"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Add More"
+        android:id="@+id/btn_add_more"/>
 
 </RelativeLayout>

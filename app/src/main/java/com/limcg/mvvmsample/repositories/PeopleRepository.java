@@ -8,22 +8,82 @@ import com.limcg.mvvmsample.models.People;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Singleton People Repository
+ */
 public class PeopleRepository {
 
+    // instance
+    private static PeopleRepository instance;
+
+    // People data set
     private ArrayList<People> dataSet = new ArrayList<>();
 
+    // People container
+    private MutableLiveData<List<People>> peopleContainer = new MutableLiveData<>();
+
+    // update status
+    private MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
+
+    /**
+     * Singleton instance
+     */
+    public static PeopleRepository getInstance(){
+        if(instance == null) {
+            instance = new PeopleRepository();
+        }
+        return instance;
+    }
+
+    /**
+     * Set list update status
+     * @param status
+     */
+    public void setStatus(boolean status)
+    {
+        updateStatus.setValue(status);
+    }
+
+    /**
+     * Get list update status
+     * @return mutable live data
+     */
+    public MutableLiveData<Boolean> getStatus()
+    {
+        return updateStatus;
+    }
+
+    /**
+     * Get all peoples
+     * @return mutable live data
+     */
     public MutableLiveData<List<People>> getRepoAllPeoples()
     {
         Log.e("TAG", "Network called get data from REST API");
 
         setDataSet();
 
-        MutableLiveData<List<People>> mutableLiveData = new MutableLiveData<>();
-        mutableLiveData.setValue(dataSet);
+        peopleContainer.setValue(dataSet);
 
-        return mutableLiveData;
+        return peopleContainer;
     }
 
+    /**
+     * Add single user
+     * @param profileName
+     */
+    public void addRepoUser(String profileName)
+    {
+        People people = new People("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg", profileName);
+
+        dataSet.add(people);
+
+        peopleContainer.setValue(dataSet);
+    }
+
+    /**
+     * Propagate data
+     */
     private void setDataSet()
     {
         People people1 = new People("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg",
