@@ -9,9 +9,16 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"/>
 
+    <ViewFlipper
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/view_flipper"
+        android:background="@android:color/holo_red_light"
+        android:layout_below="@id/toolbar"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/view_flipper"
         android:layout_above="@+id/btn_add_more"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

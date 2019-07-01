@@ -9,10 +9,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.limcg.mvvmsample.adapters.MyRecyclerViewAdapter;
 import com.limcg.mvvmsample.models.People;
@@ -25,11 +32,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView recyclerView;
+    private ViewFlipper viewFlipper;
     private MyRecyclerViewAdapter myRecyclerViewAdapter;
     private MainActivityViewModel mainActivityViewModel;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
 
         Log.e(TAG, "MainActivity onCreate");
 
@@ -40,6 +48,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
 
         recyclerView = findViewById(R.id.recyclerview);
+        viewFlipper = findViewById(R.id.view_flipper);
+        viewFlipper.setFlipInterval(3000);
+        viewFlipper.startFlipping();
+        if (viewFlipper != null) {
+
+            viewFlipper.setInAnimation(this, R.anim.in_from_left);
+            viewFlipper.setOutAnimation(this, R.anim.out_to_right);
+        }
+
+
 
         mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
@@ -76,6 +94,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button button = findViewById(R.id.btn_add_more);
         button.setOnClickListener(this);
+
+        mainActivityViewModel.getMessages().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(@Nullable List<String> strings) {
+
+                if(strings == null)
+                {
+                    return;
+                }
+
+                if (viewFlipper != null) {
+                    for (String text : strings) {
+                        TextView textView = new TextView(MainActivity.this);
+                        LinearLayout.LayoutParams layoutParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        layoutParams.setMargins(30, 30, 30, 30);
+                        textView.setTextColor(getResources().getColor(android.R.color.white));
+                        layoutParams.weight = 1.0f;
+                        layoutParams.gravity = Gravity.CENTER;
+
+                        //textView.setGravity(Gravity.CENTER);
+                        textView.setLayoutParams(layoutParams);
+                        textView.setMaxLines(1);
+//                        textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+//                        textView.setMarqueeRepeatLimit(-1);
+                        textView.setSelected(true);
+                        textView.setSingleLine(true);
+                        textView.setText(text);
+                        viewFlipper.addView(textView);
+                    }
+                }
+
+            }
+        });
+
     }
 
     private void initRecyclerView()
@@ -92,7 +145,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Go to Add activity
         if(view.getId() == R.id.btn_add_more)
         {
-            startActivity(new Intent(MainActivity.this, AddPeopleActivity.class));
+            viewFlipper.stopFlipping();
+
+            //startActivity(new Intent(MainActivity.this, AddPeopleActivity.class));
         }
 
     }
