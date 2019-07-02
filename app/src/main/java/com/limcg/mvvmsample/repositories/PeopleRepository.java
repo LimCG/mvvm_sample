@@ -1,20 +1,22 @@
 package com.limcg.mvvmsample.repositories;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.limcg.mvvmsample.di.qualifiers.ActivityContext;
 import com.limcg.mvvmsample.models.People;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Singleton People Repository
- */
-public class PeopleRepository {
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-    // instance
-    private static PeopleRepository instance;
+@Singleton
+public class PeopleRepository {
 
     // People data set
     private ArrayList<People> dataSet = new ArrayList<>();
@@ -25,14 +27,22 @@ public class PeopleRepository {
     // update status
     private MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
 
+    // App version
+    private MutableLiveData<String> appVersionLiveData = new MutableLiveData<>();
+
+    @Inject
+    Context mContext;
+
     /**
-     * Singleton instance
+     * Get App version
      */
-    public static PeopleRepository getInstance(){
-        if(instance == null) {
-            instance = new PeopleRepository();
-        }
-        return instance;
+    public MutableLiveData<String> getAppVersion() throws PackageManager.NameNotFoundException {
+
+        PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
+        String version = pInfo.versionName;
+        appVersionLiveData.setValue(version);
+
+        return appVersionLiveData;
     }
 
     /**

@@ -8,6 +8,8 @@ import com.limcg.mvvmsample.repositories.PeopleRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class MainActivityViewModel extends ViewModel {
 
     private static final String TAG = MainActivityViewModel.class.getSimpleName();
@@ -15,8 +17,8 @@ public class MainActivityViewModel extends ViewModel {
     // Container list
     private LiveData<List<People>> mPeopleContainer;
 
-    // people repository
-    private PeopleRepository peopleRepository = PeopleRepository.getInstance();
+    @Inject
+    PeopleRepository peopleRepository;
 
     /**
      * Get all people to propagate into list

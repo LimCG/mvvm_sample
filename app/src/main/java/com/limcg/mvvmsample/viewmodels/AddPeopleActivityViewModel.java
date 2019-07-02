@@ -6,11 +6,13 @@ import android.arch.lifecycle.ViewModel;
 
 import com.limcg.mvvmsample.repositories.PeopleRepository;
 
+import javax.inject.Inject;
+
 
 public class AddPeopleActivityViewModel extends ViewModel {
 
-    // Repository
-    private PeopleRepository peopleRepository = PeopleRepository.getInstance();
+    @Inject
+    PeopleRepository peopleRepository;
 
     /**
      * Adding single user
