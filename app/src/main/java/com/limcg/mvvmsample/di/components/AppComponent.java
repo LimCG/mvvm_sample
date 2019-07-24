@@ -24,4 +24,6 @@ public interface AppComponent {
 
     @ApplicationContext
     Context getApplicationContext();
+
+    PeopleRepository getPeopleRepository();
 }

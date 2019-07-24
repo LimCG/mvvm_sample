@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.limcg.mvvmsample.di.qualifiers.ActivityContext;
+import com.limcg.mvvmsample.di.qualifiers.ApplicationContext;
+import com.limcg.mvvmsample.di.qualifiers.ScopeActivity;
 import com.limcg.mvvmsample.models.People;
 
 import java.util.ArrayList;
@@ -30,8 +32,13 @@ public class PeopleRepository {
     // App version
     private MutableLiveData<String> appVersionLiveData = new MutableLiveData<>();
 
+    private Context mContext;
+
     @Inject
-    Context mContext;
+    public PeopleRepository(Context context)
+    {
+        mContext = context;
+    }
 
     /**
      * Get App version

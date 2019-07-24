@@ -23,11 +23,14 @@ import com.limcg.mvvmsample.di.components.MainActivityComponent;
 import com.limcg.mvvmsample.di.modules.MainActivityModule;
 import com.limcg.mvvmsample.di.qualifiers.ActivityContext;
 import com.limcg.mvvmsample.models.People;
+import com.limcg.mvvmsample.repositories.PeopleRepository;
 import com.limcg.mvvmsample.viewmodels.MainActivityViewModel;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Qualifier;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -38,8 +41,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MainActivityViewModel mainActivityViewModel;
     private MainActivityComponent mainActivityComponent;
 
-    @Inject
+    @Inject @ActivityContext
     Context mContext;
+
+    @Inject
+    PeopleRepository peopleRepository;
 
     private MainActivityComponent getActivityComponent()
     {
@@ -100,21 +106,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            }
 //        });
 
-       // initRecyclerView();
+       initRecyclerView();
 
         Button button = findViewById(R.id.btn_add_more);
         button.setOnClickListener(this);
 
-        PackageInfo pInfo = null;
-        try {
-            pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
-            String version = pInfo.versionName;
-
-            Toast.makeText(mContext, version, Toast.LENGTH_LONG).show();
-
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        if(mContext != null)
+        {
+//            try {
+//                Toast.makeText(mContext, peopleRepository.getAppVersion().getValue(), Toast.LENGTH_SHORT).show();
+//            } catch (PackageManager.NameNotFoundException e) {
+//                e.printStackTrace();
+//            }
         }
+
+        if(peopleRepository != null)
+        {
+            try {
+                Toast.makeText(mContext, peopleRepository.getAppVersion().getValue(), Toast.LENGTH_SHORT).show();
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        try {
+//            Toast.makeText(mContext, peopleRepository.getAppVersion().getValue(), Toast.LENGTH_SHORT).show();
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
+
     }
 
     private void initRecyclerView()
